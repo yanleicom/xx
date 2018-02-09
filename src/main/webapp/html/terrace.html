@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Llz">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/sanshi.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/template.js"></script>
+    <script src="../js/progress.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <script src="../js/chart.js"></script>
+    <script src="../js/ra.js"></script>
+    <script src="../js/hangzhou.js"></script>
+    <title>监控大屏</title>
+</head>
+<body>
+    <main>
+        <header>
+            <h2>监控大屏</h2>
+            <div class="head_top">四个平台</div>
+        </header>
+        <div class="jk_content fixed">
+            <div class="te_con_left" id="te_con_left"></div>
+            <div class="te_con_ctr">
+                <div class="te_con_ctrup" id="te_con_ctrup" style="height:460px;width:480px"></div>
+                <div class="te_con_ctrdown">
+                    <div class="jk_left_banjie_tital">分静态事件数</div>
+                    <div class="jk_left_banjie_con fixed">
+                        <div class="overyuan" id="overyuan">
+                            <div class="yuannei">已办结</div>
+                        </div>
+                        <div class="overyuan" id="noyuan">
+                            <div class="yuannei">未办结</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="te_con_right">
+                <div class="te_con_righttop" id="te_con_righttop" ></div>
+                <div class="te_con_rightbtm" id="te_con_rightbtm" style="height:320px; width:380px"></div>
+            </div>
+        </div>
+        <footer></footer>
+    </main>
+</body>
+</html>
+<script type="text/html" id="test">
+    <div class='te_con_lefttop'>
+        <h3>总事件数</h3>
+        <section>{{total}}</section>
+    </div>
+    <div class="te_con_leftbtm">
+        <h3>实有法人机构</h3>
+        <ul class='con_right_nav fixed'>
+            {{each lists as value i}}
+                {{if i==0}}
+                <li class='active'>{{value}}</li>
+                {{else}}
+                <li>{{value}}</li>
+                {{/if}}
+            {{/each}}
+        </ul>
+        <div class='con_right_wai' id='con_right_wai'>
+            {{each dlists as bu}}
+                <div class='con_right_waishow'>
+                    {{each bu.fenlist as list}}
+                        <div class='con_right_li fixed'>
+                            <div class='con_right_liF'>{{list.name}}</div>
+                            <div class='prg con_right_liS' w={{list.percent}}></div>
+                            <div class='con_right_liT'>{{list.num}}</div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</script>
+<script>
+    $(function (){
+        $.ajax({
+            type: "get",
+            url: "http://192.168.0.112:8081/showRegion",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var thtml = template('test', data); 
+                $('#te_con_left').html(thtml)
+                Progress()
+                $.each($('.con_right_nav li'),function(index,el){
+                    $(this).click(function(){
+                        $(this).addClass('active').siblings().removeClass('active')
+                        $('#con_right_wai .con_right_waishow').eq(index).show().siblings().hide()
+                    })
+                })
+            },
+            error:function(){
+                console.log('error')
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: "http://192.168.0.112:8081/showCation",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                console.log(data.dlists[0].fenlist)
+                var barChart = echarts.init(document.getElementById('te_con_rightbtm'));
+                // nanoption.series[0].data=data.colnums[index].fenData
+                baroption.xAxis[0].data=data.lists
+                baroption.series[0].data=data.longList
+                barChart.setOption(baroption);
+                var peiChart = echarts.init(document.getElementById('te_con_righttop'));
+                peioption.series[0].data=data.dlists[1].fenlist
+                peiChart.setOption(peioption);
+                $('#overyuan').radialIndicator({
+                    barColor: '#00b7e9',
+                    barWidth: 2,
+                    initValue: data.dlists[0].fenlist[0].value,
+                    roundCorner : true,
+                    percentage: true,
+                })
+                $('#noyuan').radialIndicator({
+                    barColor: '#af13cc',
+                    barWidth: 2,
+                    initValue: data.dlists[0].fenlist[1].value,
+                    roundCorner : true,
+                    percentage: true,
+                })
+            },
+            error:function(){
+                console.log('error')
+            }
+        });
+    })
+   
+    echarts.registerMap('xiacheng', hangzhouJson);
+    var thichart = echarts.init(document.getElementById('te_con_ctrup'));
+    thichart.setOption(thioption)
+</script>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Llz">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/sanshi.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/template.js"></script>
+    <script src="../js/progress.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <script src="../js/chart.js"></script>
+    <script src="../js/hangzhou.js"></script>
+    <title>监控大屏</title>
+</head>
+<body>
+    <main>
+        <header>
+            <h2>监控大屏</h2>
+            <div class="head_top">三实数据</div>
+        </header>
+        <div class="jk_content fixed">
+            <div class="jk_con_left" id="jk_con_left">
+                <div class="con_left_pei" id="con_left_pei"></div>
+            </div>
+            <div class="jk_con_cen" id="jk_con_cen" style="height: 560px; width:480px;"></div>
+            <div class="jk_con_right" id="jk_con_right"></div>
+        </div>
+        <footer></footer>
+    </main>
+</body>
+</html>
+<script type="text/html" id="dest">
+    <h3>实有人口</h3>
+    <ul class='con_left_nav fixed'>
+        {{each lists as value i}}
+            {{if i==0}}
+            <li class='active'>{{value}}</li>
+            {{else}}
+            <li>{{value}}</li>
+            {{/if}}
+        {{/each}}
+    </ul>
+    <div class='con_left_wai' id='con_left_wai'>
+        {{each dlists as bu}}
+            <div class='con_left_waishow'>
+                {{each bu.fenlist as list}}
+                    <div class='con_left_li fixed'>
+                        <div class='con_left_liF'>{{list.name}}</div>
+                        <div class='prg con_left_liS' w={{list.percent}}></div>
+                        <div class='con_left_liT'>{{list.num}}</div>
+                    </div>
+                {{/each}}
+            </div>
+        {{/each}}
+    </div>
+</script>
+<script type="text/html" id="test">
+    <h3>实有法人机构</h3>
+    <ul class='con_right_nav fixed'>
+        {{each lists as value i}}
+            {{if i==0}}
+            <li class='active'>{{value}}</li>
+            {{else}}
+            <li>{{value}}</li>
+            {{/if}}
+        {{/each}}
+    </ul>
+    <div class='con_right_wai' id='con_right_wai'>
+        {{each dlists as bu}}
+            <div class='con_right_waishow'>
+                {{each bu.fenlist as room}}
+                    <div class='con_right_li fixed'>
+                        <div class='con_right_liF'>{{room.name}}</div>
+                        <div class='prg con_right_liS' w={{room.percent}}></div>
+                        <div class='con_right_liT'>{{room.num}}</div>
+                    </div>
+                {{/each}}
+            </div>
+        {{/each}}
+    </div>
+</script>
+<script>
+    $(function (){
+        $.ajax({
+            type:'GET',
+            async:false,
+            url:"http://192.168.0.112:8081/showPeople",
+            dataType:'JSON',
+            success:function(data){ 
+                console.log(data)
+                var html = template('dest', data); 
+                $('#jk_con_left').prepend(html)
+                var nanchart = echarts.init(document.getElementById('con_left_pei'));
+                nanoption.series[0].data=data.colnums[0].fenData
+                nanchart.setOption(nanoption)
+                $.each($('.con_left_nav li'),function(index,el){
+                    $(this).click(function(){
+                        $(this).addClass('active').siblings().removeClass('active')
+                        $('#con_left_wai .con_left_waishow').eq(index).show().siblings().hide()
+                        var nanchart = echarts.init(document.getElementById('con_left_pei'));
+                        nanoption.series[0].data=data.colnums[index].fenData
+                        nanchart.setOption(nanoption)
+                    })
+                })
+            },
+            error:function(data){
+                alert('error')
+            }
+        })
+        $.ajax({
+            type: "GET",
+            url: "http://192.168.0.112:8081/showHavePeople",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var thtml = template('test', data); 
+                $('#jk_con_right').html(thtml)
+                Progress()
+                $.each($('.con_right_nav li'),function(index,el){
+                    $(this).click(function(){
+                        $(this).addClass('active').siblings().removeClass('active')
+                        $('#con_right_wai .con_right_waishow').eq(index).show().siblings().hide()
+                     })
+                })
+            }
+        });
+    })
+    
+     
+</script>
+<script>
+    echarts.registerMap('xiacheng', hangzhouJson);
+    var mapchart = echarts.init(document.getElementById('jk_con_cen'));
+    mapchart.setOption(mapoption)
+
+    template.helper('number',function(value){
+        if(value>10000){
+            return (value/10000).toFixed(2)+'万'
+        }else{
+            return value
+        }
+    })
+    
+</script>

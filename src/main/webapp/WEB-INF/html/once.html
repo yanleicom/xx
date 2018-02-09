@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Llz">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/sanshi.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/template.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/chart.js"></script>
+    <title>监控大屏</title>
+</head>
+<body>
+    <main>
+        <header>
+            <h2>监控大屏</h2>
+            <div class="head_top">最多跑一次</div>
+        </header>
+        <div class="jk_content fixed">
+            <div class="jk_con_left" id="jk_con_left"></div>
+            <div class="jk_con_cen" id="jk_con_cen">
+                <div class="once_top">
+                    <h3>开通网上办事事项总数</h3>
+                    <section>7234234</section>
+                </div>
+                <div class="once_btm" id="once_btm"></div>
+            </div>
+            <div class="jk_con_right" id="jk_con_right"></div>
+        </div>
+        <footer></footer>
+    </main>
+</body>
+</html>
+<script type="text/html" id="test">
+    <h3>实有法人机构</h3>
+    <ul class='once_right_nav fixed'>
+        {{each lists as value i}}
+            {{if i==0}}
+            <li class='active'>{{value}}</li>
+            {{else}}
+            <li>{{value}}</li>
+            {{/if}}
+        {{/each}}
+    </ul>
+    <div class='con_right_wai' id='con_right_wai'>
+        {{each dlists as bu}}
+            <div class='con_right_waishow'>
+                {{each bu.fenlist as list}}
+                    <div class='con_right_li fixed'>
+                        <div class='con_right_liF'>{{list.name}}</div>
+                        <div class='prg con_right_liS' w={{list.percent}}></div>
+                        <div class='con_right_liT'>{{list.num}}</div>
+                    </div>
+                {{/each}}
+            </div>
+        {{/each}}
+    </div>
+</script>
+<script type="text/html" id="dest">
+    <h3>分部门办件数</h3>
+    <ul class='jk_right_nav fixed'>
+        {{each lists as value i}}
+           {{if i==0}}
+            <li class='active'>{{value}}</li>
+           {{else}}
+           <li>{{value}}</li>
+           {{/if}}
+        {{/each}}
+    </ul>
+    <div class='jk_table_wai' id='jk_table_wai'>
+        {{each dlists as bu}}
+            <table>
+                <tr>
+                    <th>排名</th>
+                    <th>部门名称</th>
+                    <th>办件数</th>
+                </tr>
+                {{each bu.fenlist as list i}}
+                    <tr>
+                       <td>{{i+1}}</td>
+                       <td>{{list.bumen}}</td>
+                       <td>{{list.num}}</td>
+                    </tr>
+                 {{/each}}
+            </table>
+        {{/each}}
+    </div>
+</script> 
+<script>
+    $(function (){
+        $.ajax({
+            type: "get",
+            url: "http://192.168.0.112:8081/showRegion",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                $('.once_top section').html(data.total)
+                var thtml = template('test', data); 
+                $('#jk_con_left').html(thtml)
+                Progress()
+                $.each($('.once_right_nav li'),function(index,el){
+                    $(this).click(function(){
+                        $(this).addClass('active').siblings().removeClass('active')
+                        $('#con_right_wai .con_right_waishow').eq(index).show().siblings().hide()
+                    })
+                })
+            },
+            error:function(){
+                console.log('error')
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: "http://192.168.0.112:8081/showDapartmentNumber",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var html = template('dest', data); 
+                $('#jk_con_right').html(html)
+                $.each($('.jk_right_nav li'),function(index,el){
+                    $(this).click(function(){
+                        $(this).addClass('active').siblings().removeClass('active')
+                        $('#jk_table_wai table').eq(index).show().siblings().hide()
+                    })
+                })
+            },
+            error:function(){
+                console.log('error')
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: "http://192.168.0.112:8081/showHandleFile",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var peiChart = echarts.init(document.getElementById('once_btm'));
+                peioption.series[0].data=data
+                peiChart.setOption(peioption);
+            },
+            error:function(){
+                console.log('error')
+            }
+        });
+    })
+    var peiChart = echarts.init(document.getElementById('once_btm'));
+    peiChart.setOption(peioption);
+</script>

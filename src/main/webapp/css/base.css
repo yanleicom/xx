@@ -1,0 +1,138 @@
+body,
+ol,
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+th,
+td,
+dl,
+dd,
+form,
+fieldset,
+legend,
+input,
+textarea,
+select {
+    margin: 0;
+    padding: 0
+}
+*{
+    box-sizing: border-box;
+}
+body {
+    font: 12px"宋体", "Arial Narrow", HELVETICA;
+    background: #000;
+    -webkit-text-size-adjust: 100%;
+}
+
+a {
+    color: #2d374b;
+    text-decoration: none
+}
+
+a:hover {
+    color: #cd0200;
+    text-decoration: underline
+}
+
+em {
+    font-style: normal
+}
+
+li {
+    list-style: none
+}
+
+img {
+    border: 0;
+    vertical-align: middle
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+p {
+    word-wrap: break-word
+}
+/* 共用部分 */
+.fixed:after{
+    display:block;
+    clear:both;
+    content:'';
+    visibility:hidden;
+    height:0
+    }
+.fixed{
+    zoom:1
+}
+main{
+    width: 1280px;
+    height: 100%;
+    margin: 0 auto;
+    background-color: #170c52;
+}
+header{
+    margin: 0 auto 0 auto;
+    width: 400px;
+    height: 80px;
+    position: relative;
+    z-index: 2;
+}
+header::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #4425a6;
+    transform: perspective(.5em) rotateX(-1deg);
+    transform-origin: bottom;
+    z-index: -1;
+}
+header h2{
+    margin: 0 auto;
+    width: 300px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    font-size: 26px;
+}
+header .head_top{
+    margin: 0 auto;
+    width: 300px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    color: #fff;
+    font-size: 16px;
+}
+.jk_content{
+    width: 1280px;
+    margin: 10px auto;
+}
+footer{
+    margin: 0 auto 0 auto;
+    width: 400px;
+    height: 80px;
+    position: relative;
+}
+footer::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #4425a6;
+    transform: perspective(.5em) rotateX(2deg);
+    transform-origin: bottom;
+}

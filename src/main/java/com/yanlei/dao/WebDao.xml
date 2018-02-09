@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanlei.dao.WebDao">
+    <select id="findQjwList" resultType="com.yanlei.model.Qjw">
+        SELECT * from qjw2 limit 0,10
+    </select>
+
+    <insert id="saveQjw" parameterType="com.yanlei.model.Qjw" >
+        insert into qjw2 (department, number,
+        updatatime)
+        values (#{department,jdbcType=VARCHAR}, #{number,jdbcType=BIGINT},
+        #{updatatime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateQjw" parameterType="com.yanlei.model.Qjw">
+        update qjw2
+        <set >
+            <if test="department != null" >
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null" >
+                number = #{number,jdbcType=BIGINT},
+            </if>
+            <if test="updatatime != null" >
+                updatatime = #{updatatime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

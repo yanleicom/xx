@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Llz">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/template.js"></script>
+    <script src="../js/ra.js"></script>
+    <title>监控大屏</title>
+</head>
+<style>
+</style>
+<body>
+    <main>
+        <header>
+            <h2>监控大屏</h2>
+            <div class="head_top">下城政务工作平台</div>
+        </header>
+        <div class="jk_content fixed">
+            <div class="jk_left" id="jk_left">
+                
+            </div>
+            <div class="jk_right" id="jk_right"></div>
+        </div>
+        <footer>
+        </footer>
+    </main>
+</body>
+
+</html>
+<script type="text/html" id="test">
+    <ul class="jk_left_up">
+        <li>
+            <div>{{column1}}</div>
+            <section>{{usenumber}}</section>
+        </li>
+        <li>
+            <div>{{column2}}</div>
+            <section>{{activenumber}}</section>
+        </li>
+        <li>
+            <div>{{column3}}</div>
+            <section>{{filenumber}}</section>
+        </li>
+    </ul>
+    <div class="jk_left_jian">
+        <div class="jk_left_jianlist">
+            <div class="jk_left_jiandiv">{{column4}}</div>
+            <section class="jk_left_jiansec">{{fileavg}}</section>
+        </div>
+        <div class="jk_left_jianlist">
+            <div class="jk_left_jiandiv">{{column5}}</div>
+            <section class="jk_left_jiansec">{{filetime}}</section>
+        </div>
+    </div>
+    <div class="jk_left_banjie">
+        <div class="jk_left_banjie_tital">{{column8}}</div>
+        <div class="jk_left_banjie_con fixed">
+            <div class="overyuan" id="overyuan">
+                <div class="yuannei">{{column6}}</div>
+            </div>
+            <div class="overyuan" id="noyuan">
+                <div class="yuannei">{{column7}}</div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="dest">
+    <h3>分部门办件数</h3>
+    <ul class='jk_right_nav fixed'>
+        {{each lists as value i}}
+           {{if i==0}}
+            <li class='active'>{{value}}</li>
+           {{else}}
+           <li>{{value}}</li>
+           {{/if}}
+        {{/each}}
+    </ul>
+    <div class='jk_table_wai' id='jk_table_wai'>
+        {{each dlists as bu}}
+            <table>
+                <tr>
+                    <th>排名</th>
+                    <th>部门名称</th>
+                    <th>办件数</th>
+                </tr>
+                {{each bu.fenlist as list i}}
+                    <tr>
+                       <td>{{i+1}}</td>
+                       <td>{{list.bumen}}</td>
+                       <td>{{list.num}}</td>
+                    </tr>
+                 {{/each}}
+            </table>
+        {{/each}}
+    </div>
+</script>
+<script>
+
+    $(function (){
+        $.ajax({
+            type:'GET',
+            url:"http://192.168.0.112:8081/showDapartmentNumber",
+            dataType:'JSON',
+            success:function(data){ 
+                console.log(data)
+                var html = template('dest', data); 
+                $('#jk_right').html(html)
+                $.each($('.jk_right_nav li'),function(index,el){
+                    $(this).click(function(){
+                        $(this).addClass('active').siblings().removeClass('active')
+                        $('#jk_table_wai table').eq(index).show().siblings().hide()
+                    })
+            })
+            },
+            error:function(data){
+                
+            }
+        })
+        $.ajax({
+            type: "GET",
+            url: "http://192.168.0.112:8081/showPeopleFile",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var html = template('test', data); 
+                $('#jk_left').html(html)
+                $('#overyuan').radialIndicator({
+                    barColor: '#00b7e9',
+                    barWidth: 2,
+                    initValue: data.fileover,
+                    roundCorner : true,
+                    percentage: true,
+                })
+                $('#noyuan').radialIndicator({
+                    barColor: '#af13cc',
+                    barWidth: 2,
+                    initValue: data.filestart,
+                    roundCorner : true,
+                    percentage: true,
+                })
+            }
+        });
+    })
+    
+</script>

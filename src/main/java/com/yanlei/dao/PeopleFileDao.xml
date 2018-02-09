@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanlei.dao.PeopleFileDao">
+
+    <sql id="add">
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="department != null" >
+                department,
+            </if>
+            <if test="number != null" >
+                number,
+            </if>
+            <if test="updatatime != null" >
+                updatatime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="department != null" >
+                #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null" >
+                #{number,jdbcType=BIGINT},
+            </if>
+            <if test="updatatime != null" >
+                #{updatatime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="update">
+        <set >
+            <if test="department != null" >
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null" >
+                number = #{number,jdbcType=BIGINT},
+            </if>
+            <if test="updatatime != null" >
+                updatatime = #{updatatime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </sql>
+
+    <select id="findPeopleFileList" resultType="com.yanlei.model.PeopleFile">
+       SELECT * FROM people_file WHERE id = 2
+    </select>
+
+    <select id="findQjwList" resultType="com.yanlei.model.Qjw">
+        SELECT * FROM qjw
+    </select>
+
+    <select id="findQwbList" resultType="com.yanlei.model.Qwb">
+       SELECT * FROM qwb ORDER BY number DESC
+    </select>
+
+    <select id="findRlbList" resultType="com.yanlei.model.Rlb">
+        SELECT * FROM rlb
+    </select>
+
+    <select id="findZfbList" resultType="com.yanlei.model.Zfb">
+        SELECT * FROM zfb
+    </select>
+
+    <select id="findZxList" resultType="com.yanlei.model.Zx">
+        SELECT * FROM zx
+    </select>
+
+    <select id="findFbm" resultType="com.yanlei.model.Fbm">
+        SELECT * FROM fbm WHERE id = 1
+    </select>
+
+    <update id="updatePeople" parameterType="com.yanlei.model.PeopleFile" >
+        update people_file2
+        <set >
+            <if test="usenumber != null" >
+                usenumber = #{usenumber,jdbcType=BIGINT},
+            </if>
+            <if test="activenumber != null" >
+                activenumber = #{activenumber,jdbcType=BIGINT},
+            </if>
+            <if test="filenumber != null" >
+                filenumber = #{filenumber,jdbcType=BIGINT},
+            </if>
+            <if test="fileavg != null" >
+                fileavg = #{fileavg,jdbcType=BIGINT},
+            </if>
+            <if test="filetime != null" >
+                filetime = #{filetime,jdbcType=VARCHAR},
+            </if>
+            <if test="filestart != null" >
+                filestart = #{filestart,jdbcType=BIGINT},
+            </if>
+            <if test="fileover != null" >
+                fileover = #{fileover,jdbcType=BIGINT},
+            </if>
+            <if test="column1 != null" >
+                column1 = #{column1,jdbcType=VARCHAR},
+            </if>
+            <if test="column2 != null" >
+                column2 = #{column2,jdbcType=VARCHAR},
+            </if>
+            <if test="column3 != null" >
+                column3 = #{column3,jdbcType=VARCHAR},
+            </if>
+            <if test="column4 != null" >
+                column4 = #{column4,jdbcType=VARCHAR},
+            </if>
+            <if test="column5 != null" >
+                column5 = #{column5,jdbcType=VARCHAR},
+            </if>
+            <if test="column6 != null" >
+                column6 = #{column6,jdbcType=VARCHAR},
+            </if>
+            <if test="column7 != null" >
+                column7 = #{column7,jdbcType=VARCHAR},
+            </if>
+            <if test="column8 != null" >
+                column8 = #{column8,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updatePeopleFile" parameterType="com.yanlei.model.PeopleFile" >
+        update people_file2
+        <set>
+            <if test="usenumber != null">
+                usenumber = #{usenumber,jdbcType=BIGINT},
+            </if>
+            <if test="activenumber != null">
+                activenumber = #{activenumber,jdbcType=BIGINT},
+            </if>
+            <if test="fileavg != null">
+                fileavg = #{fileavg,jdbcType=BIGINT},
+            </if>
+            <if test="filetime != null">
+                filetime = #{filetime,jdbcType=VARCHAR},
+            </if>
+            <if test="fileover != null">
+                fileover = #{fileover,jdbcType=BIGINT},
+            </if>
+            <if test="filestart != null">
+                filestart = #{filestart,jdbcType=BIGINT},
+            </if>
+            <if test="filenumber != null">
+                filenumber = #{filenumber,jdbcType=BIGINT},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="column1 != null">
+                column1 = #{column1,jdbcType=VARCHAR},
+            </if>
+            <if test="column2 != null">
+                column2 = #{column2,jdbcType=VARCHAR},
+            </if>
+            <if test="column3 != null">
+                column3 = #{column3,jdbcType=VARCHAR},
+            </if>
+            <if test="column4 != null">
+                column4 = #{column4,jdbcType=VARCHAR},
+            </if>
+            <if test="column5 != null">
+                column5 = #{column5,jdbcType=VARCHAR},
+            </if>
+            <if test="column6 != null">
+                column6 = #{column6,jdbcType=VARCHAR},
+            </if>
+            <if test="column7 != null">
+                column7 = #{column7,jdbcType=VARCHAR},
+            </if>
+            <if test="column8 != null">
+                column8 = #{column8,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertPeopleFile" parameterType="com.yanlei.model.PeopleFile">
+        insert into people_file2 (usenumber, activenumber,
+          fileavg, filetime, fileover,
+          filestart,filenumber,updatetime,column1,column2,column3,column4,column5,column6,column7,column8)
+        values (#{usenumber}, #{activenumber},
+          #{fileavg}, #{filetime}, #{fileover},
+          #{filestart}, #{filenumber},#{updatetime},#{column1},#{column2},#{column3},#{column4},#{column5},#{column6},#{column7},#{column8})
+    </insert>
+
+   <!-- <update id="updateQjw" parameterType="com.yanlei.model.Qjw">
+           &lt;!&ndash; <foreach collection="list" item="item" open="" close="" index="index" separator=";">&ndash;&gt;
+                UPDATE qjw
+                  <set>
+                      <if test="department != null">
+                          department=#{department,jdbcType=VARCHAR}
+                      </if>
+                      <if test="number != null">
+                          number=#{number,jdbcType=BIGINT}
+                      </if>
+                  </set>
+        WHERE id = #{id}
+            &lt;!&ndash;</foreach>&ndash;&gt;
+    </update>-->
+
+    <insert id="addQjw" parameterType="com.yanlei.model.Qjw" >
+        insert into qjw2
+        <include refid="add"/>
+    </insert>
+
+    <update id="updateQjw" parameterType="com.yanlei.model.Qjw" >
+        update qjw
+        <include refid="update"/>
+    </update>
+
+    <insert id="addQwb" parameterType="com.yanlei.model.Qwb" >
+        insert into qwb2
+        <include refid="add"/>
+    </insert>
+
+    <update id="updateQwb" parameterType="com.yanlei.model.Qwb" >
+        update qwb
+        <include refid="update"/>
+    </update>
+
+    <insert id="addRlb" parameterType="com.yanlei.model.Rlb" >
+        insert into rlb2
+        <include refid="add"/>
+    </insert>
+
+    <update id="updateRlb" parameterType="com.yanlei.model.Rlb" >
+        update rlb
+        <include refid="update"/>
+    </update>
+
+    <insert id="addZfb" parameterType="com.yanlei.model.Zfb" >
+        insert into zfb2
+        <include refid="add"/>
+    </insert>
+
+    <update id="updateZfb" parameterType="com.yanlei.model.Zfb" >
+        update zfb
+        <include refid="update"/>
+    </update>
+
+    <insert id="addZx" parameterType="com.yanlei.model.Zx" >
+        insert into zx2
+        <include refid="add"/>
+    </insert>
+
+    <update id="updateZx" parameterType="com.yanlei.model.Zx" >
+        update zx
+        <include refid="update"/>
+    </update>
+
+
+    <insert id="savePeopleFile" parameterType="com.yanlei.model.PeopleFile">
+       insert into people_file2 (id, usenumber, activenumber,
+      fileavg, filetime, fileover,
+      filestart, filenumber, updatetime,
+      column1, column2, column3,
+      column4, column5, column6,
+      column7, column8)
+    values (#{id,jdbcType=INTEGER}, #{usenumber,jdbcType=BIGINT}, #{activenumber,jdbcType=BIGINT},
+      #{fileavg,jdbcType=BIGINT}, #{filetime,jdbcType=VARCHAR}, #{fileover,jdbcType=BIGINT},
+      #{filestart,jdbcType=BIGINT}, #{filenumber,jdbcType=BIGINT}, #{updatetime,jdbcType=TIMESTAMP},
+      #{column1,jdbcType=VARCHAR}, #{column2,jdbcType=VARCHAR}, #{column3,jdbcType=VARCHAR},
+      #{column4,jdbcType=VARCHAR}, #{column5,jdbcType=VARCHAR}, #{column6,jdbcType=VARCHAR},
+      #{column7,jdbcType=VARCHAR}, #{column8,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deletePeopleFile" parameterType="com.yanlei.model.PeopleFile">
+        DELETE  FROM people_file2 WHERE id = #{id}
+    </delete>
+
+    <update id="updateFbm" parameterType="com.yanlei.model.Fbm">
+        update fbm
+        <set >
+            <if test="column1 != null" >
+                column1 = #{column1,jdbcType=VARCHAR},
+            </if>
+            <if test="column2 != null" >
+                column2 = #{column2,jdbcType=VARCHAR},
+            </if>
+            <if test="column3 != null" >
+                column3 = #{column3,jdbcType=VARCHAR},
+            </if>
+            <if test="column4 != null" >
+                column4 = #{column4,jdbcType=VARCHAR},
+            </if>
+            <if test="column5 != null" >
+                column5 = #{column5,jdbcType=VARCHAR},
+            </if>
+            <if test="column6 != null" >
+                column6 = #{column6,jdbcType=VARCHAR},
+            </if>
+            <if test="column7 != null" >
+                column7 = #{column7,jdbcType=VARCHAR},
+            </if>
+            <if test="column8 != null" >
+                column8 = #{column8,jdbcType=VARCHAR},
+            </if>
+            <if test="column9 != null" >
+                column9 = #{column9,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
